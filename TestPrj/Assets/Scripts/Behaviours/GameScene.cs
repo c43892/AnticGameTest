@@ -50,6 +50,8 @@ namespace AnticGameTest
                 var indicator = PlayerRoot.AddPlayerOpIndicator(player.Id, ball.Color, beBall);
                 indicator.OnShot += v => inputManager.ShotBall(v * 10);
             });
+
+            inputManager.OnPlayerChanged(PlayerRoot.SetActiveIndicator);
         }
     }
 }

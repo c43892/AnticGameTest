@@ -22,5 +22,11 @@ namespace AnticGameTest
 
             return indicator;
         }
+
+        public void SetActiveIndicator(string id)
+        {
+            foreach (var pid in indicators.Keys)
+                indicators[pid].Activated = pid == id;
+        }
     }
 }

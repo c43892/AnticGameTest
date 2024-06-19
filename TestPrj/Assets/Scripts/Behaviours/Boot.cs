@@ -29,7 +29,7 @@ namespace AnticGameTest
         void Start()
         {
             var colors = Enumerable.Range(0, Scene.BallModels.Length).ToArray();
-            game.Reset(500, colors);
+            game.Start(500, colors);
         }
     }
 }

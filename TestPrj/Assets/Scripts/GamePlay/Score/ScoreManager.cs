@@ -9,9 +9,15 @@ namespace AnticGameTest
 {
     public interface IScoreManager
     {
-        public void Clear();
+        void SetScore(string id, int score);
 
-        public void OnScoreChanged(Action<string, int> handler);
+        void Score(string id, int dScore);
+
+        void Clear();
+
+        int GetScore(string id);
+
+        void OnScoreChanged(Action<string, int> handler);
     }
 
     public class ScoreManager : Component, IScoreManager

@@ -21,7 +21,7 @@ namespace AnticGameTest
         public event Action<Ball> OnBallDeleted = null;
         public event Action<Ball, Vec2> OnMovingBallMoved = null;
         public event Action<Ball, Ball> OnMovingBallCollided = null;
-        public event Action<Ball> OnMovingBallStopped = null;
+        public event Action<PlayerBall> OnMovingBallStopped = null;
 
         private readonly QuadTree<Ball> tree = null;
 
@@ -117,7 +117,7 @@ namespace AnticGameTest
             var targetBalls = tree.CheckCollision(movingBall.AABB);
             foreach (Ball ball in targetBalls)
             {
-                if ((movingBall.Pos - ball.Pos).Length <= movingBall.Size + ball.Size)
+                if (!(ball is PlayerBall) && (movingBall.Pos - ball.Pos).Length <= movingBall.Size + ball.Size)
                     OnMovingBallCollided?.Invoke(movingBall, ball as Ball);
             }
         }

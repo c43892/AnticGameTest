@@ -362,6 +362,7 @@
 "Assets/Scripts/Behaviours/UI/UIRoot.cs"
 "Assets/Scripts/Component.cs"
 "Assets/Scripts/Game.cs"
+"Assets/Scripts/GamePlay/GameFlowController.cs"
 "Assets/Scripts/GamePlay/InputManager.cs"
 "Assets/Scripts/GamePlay/Player/PlayerBall.cs"
 "Assets/Scripts/GamePlay/Player/PlayerInfo.cs"
@@ -387,6 +388,11 @@
 "Assets/Scripts/Swift/RVO2/RVOMath.cs"
 "Assets/Scripts/Swift/RVO2/Simulator.cs"
 "Assets/Scripts/Swift/StableDictionary.cs"
+"Assets/Scripts/Swift/StateMachine/State.cs"
+"Assets/Scripts/Swift/StateMachine/StateMachine.cs"
+"Assets/Scripts/Swift/StateMachine/StateMachineCombination.cs"
+"Assets/Scripts/Swift/StateMachine/StateMachineManager.cs"
+"Assets/Scripts/Swift/StateMachine/StateTransition.cs"
 -langversion:9.0
 /deterministic
 /optimize-

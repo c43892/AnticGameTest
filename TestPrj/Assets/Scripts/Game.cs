@@ -36,27 +36,27 @@ namespace AnticGameTest
         public void Build(int randomSeed, Fix64 minX, Fix64 minY, Fix64 maxX, Fix64 maxY)
         {
             // QuadTree will be shared in different components
-            var quadTree = new QuadTree<Ball>(minX, minY, maxX, maxY);
+            QuadTree<Ball> quadTree = new(minX, minY, maxX, maxY);
 
             // ball spawner
-            var staticBallSpawner = new BallSpawner(randomSeed, quadTree);
+            BallSpawner staticBallSpawner = new(randomSeed, quadTree);
             cc.Add(staticBallSpawner);
 
             // player manager
-            var playerManager = new PlayerManager();
+            PlayerManager playerManager = new();
             cc.Add(playerManager);
 
             // scene
-            var scene = new Scene(quadTree, staticBallSpawner, playerManager);
+            Scene scene = new(quadTree, staticBallSpawner, playerManager);
             cc.Add(scene);
 
             // input manager
-            var inputManager = new InputManager(scene, playerManager);
+            InputManager inputManager = new(scene, playerManager);
             cc.Add(inputManager);
             playerManager.OnPlayerAdded((player, ball) => inputManager.Players.Add(player));
 
             // score manager
-            var scoreManager = new ScoreManager(-100, 100);
+            ScoreManager scoreManager = new(-100, 100);
             cc.Add(scoreManager);
             playerManager.OnPlayerAdded((player, ball) => scoreManager.SetScore(player.Id, 0));
             scene.OnMovingBallCollided += (movingBall, targetBall) =>
@@ -72,9 +72,14 @@ namespace AnticGameTest
                     scene.DelBall(targetBall);
                 }
             };
+
+            // game flow control
+            GameFlowController gfc = new(scene, inputManager);
+            cc.Add(gfc);
+            gfc.Build();
         }
 
-        public void Reset(int ballCount, int[] colors)
+        public void Start(int ballCount, int[] colors)
         {
             var scene = cc.Get<Scene>();
             scene.Clear();
@@ -84,7 +89,11 @@ namespace AnticGameTest
 
             // initialize the game status
             scene.SpawnStaticBalls(ballCount, colors, 0.5f, 1);
-            scene.AddPlayer("p1", colors[0], 1.5f);
+            scene.AddPlayer("p1", colors[0], 2);
+            scene.AddPlayer("p2", colors[1], 2);
+
+            var gfc = cc.Get<GameFlowController>();
+            gfc.StartFlow();
         }
 
         public T GetComponent<T>() where T : class => cc.Get<T>();
