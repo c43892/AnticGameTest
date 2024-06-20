@@ -24,9 +24,9 @@ namespace AnticGameTest
 
         private readonly List<Action<Ball>> onBallSpawnedHandlers = new();
 
-        public BallSpawner(int randomSeed, QuadTree<Ball> quadTree)
+        public BallSpawner(SRandom random, QuadTree<Ball> quadTree)
         {
-            rand = new SRandom(randomSeed);
+            rand = random;
             tree = quadTree;
         }
 

@@ -13,8 +13,9 @@ namespace AnticGameTest
 
         public Fix64 LogicFrameTimeInterval { get; set; } = 0.01f; // in seconds
 
-        // expose it only because the gizmos need it. may need to find a better way
-        public QuadTree<Ball> Tree { get; private set; }
+        public SRandom Rand { get; private set; }
+
+        public QuadTree<Ball> Tree { get; private set; } // expose it only because the gizmos need it. may need to find a better way
 
         // to accumulate the elapsed time
         private Fix64 timeElapsed = 0;
@@ -38,30 +39,31 @@ namespace AnticGameTest
 
         public void Build(int randomSeed, Fix64 minX, Fix64 minY, Fix64 maxX, Fix64 maxY)
         {
-            // QuadTree will be shared in different components
+            // Random & QuadTree will be shared in different components
+            Rand = new SRandom(randomSeed);
             Tree = new(minX, minY, maxX, maxY);
 
             // ball spawner
-            BallSpawner staticBallSpawner = new(randomSeed, Tree);
-            cc.Add(staticBallSpawner);
+            BallSpawner ballSpawner = new(Rand, Tree);
+            cc.Add(ballSpawner);
 
             // player manager
             PlayerManager playerManager = new();
             cc.Add(playerManager);
 
             // scene
-            Scene scene = new(Tree, staticBallSpawner, playerManager);
+            Scene scene = new(Tree, ballSpawner, playerManager);
             cc.Add(scene);
 
             // input manager
             InputManager inputManager = new(scene, playerManager);
             cc.Add(inputManager);
-            playerManager.OnPlayerAdded((player, ball) => inputManager.Players.Add(player));
+            playerManager.OnPlayerAdded((player) => inputManager.Players.Add(player));
 
             // score manager
             ScoreManager scoreManager = new(-100, 100);
             cc.Add(scoreManager);
-            playerManager.OnPlayerAdded((player, ball) => scoreManager.SetScore(player.Id, 0));
+            playerManager.OnPlayerAdded((player) => scoreManager.SetScore(player.Id, 0));
             scene.OnMovingBallCollided += (movingBall, targetBall) =>
             {
                 if (movingBall.Color == targetBall.Color)
@@ -77,7 +79,7 @@ namespace AnticGameTest
             };
 
             // game flow control
-            GameFlowController gfc = new(scene, inputManager);
+            GameFlowController gfc = new(scene, inputManager, playerManager);
             cc.Add(gfc);
             gfc.Build();
         }
@@ -92,8 +94,17 @@ namespace AnticGameTest
 
             // initialize the game status
             scene.SpawnStaticBalls(ballCount, colors, 0.5f, 1);
-            scene.AddPlayer("p1", colors[0], 2, Vec2.Zero);
-            scene.AddPlayer("p2", colors[1], 2, Vec2.Zero);
+
+            // add players
+            var playerManager = cc.Get<IPlayerManager>();
+            var pb1 = scene.AddPlayerBall("p1", colors[0], 2, Vec2.Zero);
+            var pb2 = scene.AddPlayerBall("p2", colors[1], 2, Vec2.Zero);
+            var p1 = playerManager.AddPlayer(pb1.PlayerId);
+            var p2 = playerManager.AddPlayer(pb2.PlayerId);
+
+            // make p2 an ai player
+            var aiManager = cc.Get<IAIManager>();
+            aiManager.MakePlayerAIDrive(p2, new AIRandomShot(Rand, 100, 300));
 
             var gfc = cc.Get<GameFlowController>();
             gfc.StartFlow();

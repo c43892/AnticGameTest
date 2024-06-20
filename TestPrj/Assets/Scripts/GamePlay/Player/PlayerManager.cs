@@ -9,24 +9,30 @@ namespace AnticGameTest
 {
     public interface IPlayerManager
     {
-        public void OnPlayerAdded(Action<PlayerInfo, PlayerBall> handler);
-        public void AddPlayer(string id, PlayerBall ball);
+        public void OnPlayerAdded(Action<PlayerInfo> handler);
+        public PlayerInfo AddPlayer(string id);
         public PlayerInfo GetPlayer(string id);
-        public PlayerBall GetPlayerBall(string id);
+        public PlayerInfo[] Players { get; }
         public void Clear();
     }
 
-    public class PlayerManager : Component, IPlayerManager
+    public interface IAIManager
+    {
+        public AIPlayer MakePlayerAIDrive(PlayerInfo player, IAIStrategy strategy);
+        public AIPlayer GetAi(string id);
+        public AIPlayer[] Ais { get; }
+    }
+
+    public class PlayerManager : Component, IPlayerManager, IAIManager
     {
         public override string Name { get => "PlayerManager"; }
 
         readonly Dictionary<string, PlayerInfo> players = new();
-        readonly Dictionary<string, PlayerBall> balls = new();
-        readonly List<Action<PlayerInfo, PlayerBall>> onPlayerAddedHandlers = new();
+        readonly List<Action<PlayerInfo>> onPlayerAddedHandlers = new();
 
-        public void AddPlayer(string id, PlayerBall ball)
+        public PlayerInfo AddPlayer(string id)
         {
-            if (players.ContainsKey(id) || balls.ContainsKey(id))
+            if (players.ContainsKey(id))
             {
                 throw new Exception($"player: {id} already exists");
             }
@@ -34,22 +40,41 @@ namespace AnticGameTest
             var player = new PlayerInfo(id);
 
             players[id] = player;
-            balls[id] = ball;
 
-            onPlayerAddedHandlers.ForEach(h => h?.Invoke(player, ball));
+            onPlayerAddedHandlers.ForEach(h => h?.Invoke(player));
+
+            return player;
         }
+
+        public PlayerInfo[] Players { get => players.Values.ToArray(); }
+
+        public PlayerInfo GetPlayer(string id) => players.ContainsKey(id) ? players[id] : null;
+
+
+        #region AI
+
+        readonly Dictionary<string, AIPlayer> aiPlayers = new();
+
+        public AIPlayer MakePlayerAIDrive(PlayerInfo player, IAIStrategy strategy)
+        {
+            AIPlayer aiPlayer = new(player, strategy);
+            aiPlayers[player.Id] = aiPlayer;
+            return aiPlayer;
+        }
+
+        public AIPlayer GetAi(string id) => aiPlayers.ContainsKey(id) ? aiPlayers[id] : null;
+
+        public AIPlayer[] Ais { get => aiPlayers.Values.ToArray(); }
+
+        #endregion
 
         public void Clear()
         {
             players.Clear();
-            balls.Clear();
+            aiPlayers.Clear();
         }
 
-        public PlayerInfo GetPlayer(string id) => players[id];
-
-        public PlayerBall GetPlayerBall(string id) => balls[id];
-
-        public void OnPlayerAdded(Action<PlayerInfo, PlayerBall> handler)
+        public void OnPlayerAdded(Action<PlayerInfo> handler)
         {
             onPlayerAddedHandlers.Add(handler);
         }

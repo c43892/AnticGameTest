@@ -11,7 +11,7 @@ namespace AnticGameTest
         public GameBall[] BallModels;
         public PlayerRoot PlayerRoot;
     
-        readonly Dictionary<Ball, GameBall> balls = new();
+        readonly Dictionary<Ball, GameBall> beBalls = new();
 
         GameBall CreateBall(Ball ball)
         {
@@ -20,15 +20,15 @@ namespace AnticGameTest
             ballObj.Ball = ball;
             ballObj.transform.SetParent(BallRoot);
             ballObj.gameObject.SetActive(true);
-            balls[ball] = ballObj;
+            beBalls[ball] = ballObj;
 
             return ballObj;
         }
 
         void DeleteBall(Ball ball)
         {
-            var beBall = balls[ball];
-            balls.Remove(ball);
+            var beBall = beBalls[ball];
+            beBalls.Remove(ball);
             Destroy(beBall.gameObject);
         }
 
@@ -41,10 +41,11 @@ namespace AnticGameTest
             var inputManager = game.GetComponent<IInputManager>();
 
             var playerMgr = game.GetComponent<IPlayerManager>();
-            playerMgr.OnPlayerAdded((player, ball) =>
+            playerMgr.OnPlayerAdded((player) =>
             {
-                var beBall = CreateBall(ball);
-                balls[ball] = beBall;
+                var ball = scene.GetPlayerBall(player.Id);
+                var beBall = beBalls[ball];
+                beBalls[ball] = beBall;
 
                 var indicator = PlayerRoot.AddPlayerOpIndicator(player.Id, ball.Color, beBall);
                 indicator.OnShot += v => inputManager.ShotBall(v * 10);

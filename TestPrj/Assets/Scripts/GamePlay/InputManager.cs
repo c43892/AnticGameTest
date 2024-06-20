@@ -56,7 +56,7 @@ namespace AnticGameTest
         public void ShotBall(Vec2 v)
         {
             var p = Players[CurrentPlayerIndex];
-            var ball = PlayerManager.GetPlayerBall(p.Id);
+            var ball = Scene.GetPlayerBall(p.Id);
             Scene.ShotBall(ball, v);
         }
 

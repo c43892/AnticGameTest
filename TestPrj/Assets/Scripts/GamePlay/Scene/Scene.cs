@@ -25,6 +25,8 @@ namespace AnticGameTest
 
         private readonly QuadTree<Ball> tree = null;
 
+        private readonly Dictionary<string, PlayerBall> playerBalls = new();
+
         private PlayerBall movingBall = null;
         private Vec2 movingBallSpeed = Vec2.Zero;
         private Fix64 movingBallAccelaration = 500;
@@ -41,7 +43,7 @@ namespace AnticGameTest
         public void Clear()
         {
             tree.Clear();
-            PlayerManager.Clear();
+            playerBalls.Clear();
         }
 
         public List<Ball> SpawnStaticBalls(int count, int[] colors, Fix64 minBallSize, Fix64 maxBallSize)
@@ -55,11 +57,10 @@ namespace AnticGameTest
             return balls;
         }
 
-        public PlayerBall AddPlayer(string id, int color, Fix64 ballSize, Vec2? atSpecificPosition = null)
+        public PlayerBall AddPlayerBall(string id, int color, Fix64 ballSize, Vec2? atSpecificPosition = null)
         {
             var ball = BallSpawner.SpawnPlayerBall(id, ballSize, color);
 
-            PlayerManager.AddPlayer(id, ball);
             if (atSpecificPosition.HasValue)
                 ball.Pos = atSpecificPosition.Value;
 
@@ -68,8 +69,12 @@ namespace AnticGameTest
             AdjustBallsPositionInSimulator(tree.AllObjs.Select(aabb => aabb as Ball));
             tree.Update();
 
+            playerBalls[id] = ball;
+
             return ball;
         }
+
+        public PlayerBall GetPlayerBall(string id) => playerBalls.ContainsKey(id) ? playerBalls[id] : null;
 
         public void ShotBall(PlayerBall playerBall, Vec2 v)
         {
