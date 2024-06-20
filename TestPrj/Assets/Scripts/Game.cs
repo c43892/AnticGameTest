@@ -13,6 +13,9 @@ namespace AnticGameTest
 
         public Fix64 LogicFrameTimeInterval { get; set; } = 0.01f; // in seconds
 
+        // expose it only because the gizmos need it. may need to find a better way
+        public QuadTree<Ball> Tree { get; private set; }
+
         // to accumulate the elapsed time
         private Fix64 timeElapsed = 0;
 
@@ -36,10 +39,10 @@ namespace AnticGameTest
         public void Build(int randomSeed, Fix64 minX, Fix64 minY, Fix64 maxX, Fix64 maxY)
         {
             // QuadTree will be shared in different components
-            QuadTree<Ball> quadTree = new(minX, minY, maxX, maxY);
+            Tree = new(minX, minY, maxX, maxY);
 
             // ball spawner
-            BallSpawner staticBallSpawner = new(randomSeed, quadTree);
+            BallSpawner staticBallSpawner = new(randomSeed, Tree);
             cc.Add(staticBallSpawner);
 
             // player manager
@@ -47,7 +50,7 @@ namespace AnticGameTest
             cc.Add(playerManager);
 
             // scene
-            Scene scene = new(quadTree, staticBallSpawner, playerManager);
+            Scene scene = new(Tree, staticBallSpawner, playerManager);
             cc.Add(scene);
 
             // input manager

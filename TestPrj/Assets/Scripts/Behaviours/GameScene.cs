@@ -7,11 +7,10 @@ namespace AnticGameTest
 {
     public class GameScene : MonoBehaviour
     {
-        public Transform StaticBallRoot;
-        public Transform ActiveBallRoot;
+        public Transform BallRoot;
         public GameBall[] BallModels;
         public PlayerRoot PlayerRoot;
-
+    
         readonly Dictionary<Ball, GameBall> balls = new();
 
         GameBall CreateBall(Ball ball)
@@ -19,7 +18,7 @@ namespace AnticGameTest
             var model = BallModels[ball.Color];
             var ballObj = Instantiate(model);
             ballObj.Ball = ball;
-            ballObj.transform.SetParent(StaticBallRoot);
+            ballObj.transform.SetParent(BallRoot);
             ballObj.gameObject.SetActive(true);
             balls[ball] = ballObj;
 
@@ -52,6 +51,33 @@ namespace AnticGameTest
             });
 
             inputManager.OnPlayerChanged(PlayerRoot.SetActiveIndicator);
+
+            tree4Gizmos = game.Tree;
+        }
+
+        QuadTree<Ball> tree4Gizmos = null;
+        private void OnDrawGizmos()
+        {
+            if (tree4Gizmos == null)
+                return;
+
+            Gizmos.color = UnityEngine.Color.red;
+
+            DrawTreeGizmos(tree4Gizmos);
+        }
+
+        void DrawTreeGizmos(QuadTree<Ball> tree)
+        {
+            if (tree.Children != null)
+            {
+                var aabb = tree.AABB;
+
+                Gizmos.DrawLine(new Vector3((float)aabb.MinX, (float)aabb.Centre.y, 0), new Vector3((float)aabb.MaxX, (float)aabb.Centre.y, 0));
+                Gizmos.DrawLine(new Vector3((float)aabb.Centre.x, (float)aabb.MinY, 0), new Vector3((float)aabb.Centre.x, (float)aabb.MaxY, 0));
+
+                foreach (var child in tree.Children)
+                    DrawTreeGizmos(child);
+            }
         }
     }
 }

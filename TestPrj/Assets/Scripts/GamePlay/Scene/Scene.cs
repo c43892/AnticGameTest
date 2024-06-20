@@ -15,7 +15,7 @@ namespace AnticGameTest
         public IBallSpawner BallSpawner;
         public IPlayerManager PlayerManager;
 
-        public AABBInfo WorldBound { get => tree.WorldBound; }
+        public AABBInfo WorldBound { get => tree.AABB; }
 
         public event Action<Ball> OnBallCreated = null;
         public event Action<Ball> OnBallDeleted = null;

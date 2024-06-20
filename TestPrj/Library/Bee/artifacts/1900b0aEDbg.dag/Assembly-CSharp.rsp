@@ -388,11 +388,6 @@
 "Assets/Scripts/Swift/RVO2/RVOMath.cs"
 "Assets/Scripts/Swift/RVO2/Simulator.cs"
 "Assets/Scripts/Swift/StableDictionary.cs"
-"Assets/Scripts/Swift/StateMachine/State.cs"
-"Assets/Scripts/Swift/StateMachine/StateMachine.cs"
-"Assets/Scripts/Swift/StateMachine/StateMachineCombination.cs"
-"Assets/Scripts/Swift/StateMachine/StateMachineManager.cs"
-"Assets/Scripts/Swift/StateMachine/StateTransition.cs"
 -langversion:9.0
 /deterministic
 /optimize-

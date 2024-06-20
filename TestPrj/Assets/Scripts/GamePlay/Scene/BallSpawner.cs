@@ -37,8 +37,8 @@ namespace AnticGameTest
 
         public PlayerBall SpawnPlayerBall(string id, Fix64 size, int color)
         {
-            var posX = (rand.Next(0, 100) + 1) * tree.WorldBound.HalfSize.x * 0.02f + tree.WorldBound.MinX;
-            var posY = (rand.Next(0, 100) + 1) * tree.WorldBound.HalfSize.y * 0.02f + tree.WorldBound.MinY;
+            var posX = (rand.Next(0, 100) + 1) * tree.AABB.HalfSize.x * 0.02f + tree.AABB.MinX;
+            var posY = (rand.Next(0, 100) + 1) * tree.AABB.HalfSize.y * 0.02f + tree.AABB.MinY;
 
             var ball = new PlayerBall(id, new(posX, posY), size, color);
 
@@ -51,14 +51,14 @@ namespace AnticGameTest
         {
             var balls = new List<Ball>();
 
-            for (var i = 0; i < maxCount; i++)
+            for (var i = 0; i <= maxCount; i++)
             {
                 var colorIndex = rand.Next(0, colors.Length);
                 var color = colors[colorIndex];
 
                 var size = (rand.Next(0, 10) + 1) * (maxSize - minSize) / 10 + minSize;
-                var posX = (rand.Next(0, 100) + 1) * tree.WorldBound.HalfSize.x * 0.02f + tree.WorldBound.MinX;
-                var posY = (rand.Next(0, 100) + 1) * tree.WorldBound.HalfSize.y * 0.02f + tree.WorldBound.MinY;
+                var posX = (rand.Next(0, 100) + 1) * tree.AABB.HalfSize.x * 0.02f + tree.AABB.MinX;
+                var posY = (rand.Next(0, 100) + 1) * tree.AABB.HalfSize.y * 0.02f + tree.AABB.MinY;
                 var ball = new Ball(new(posX, posY), size, color);
 
                 balls.Add(ball);

@@ -19,7 +19,9 @@ namespace AnticGameTest
         void Awake()
         {
             game = new();
-            game.Build(System.DateTime.Now.Millisecond, -80, -45, 80, 45);
+
+            var randomSeed = System.DateTime.Now.Millisecond;
+            game.Build(randomSeed, -80, -45, 80, 45);
             GameDriver.Game = game;
 
             Scene.BuildScene(game);
