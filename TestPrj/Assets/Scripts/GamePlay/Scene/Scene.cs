@@ -55,11 +55,14 @@ namespace AnticGameTest
             return balls;
         }
 
-        public PlayerBall AddPlayer(string id, int color, Fix64 ballSize)
+        public PlayerBall AddPlayer(string id, int color, Fix64 ballSize, Vec2? atSpecificPosition = null)
         {
             var ball = BallSpawner.SpawnPlayerBall(id, ballSize, color);
 
             PlayerManager.AddPlayer(id, ball);
+            if (atSpecificPosition.HasValue)
+                ball.Pos = atSpecificPosition.Value;
+
             tree.Add(ball);
 
             AdjustBallsPositionInSimulator(tree.AllObjs.Select(aabb => aabb as Ball));

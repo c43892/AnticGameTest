@@ -89,8 +89,8 @@ namespace AnticGameTest
 
             // initialize the game status
             scene.SpawnStaticBalls(ballCount, colors, 0.5f, 1);
-            scene.AddPlayer("p1", colors[0], 2);
-            scene.AddPlayer("p2", colors[1], 2);
+            scene.AddPlayer("p1", colors[0], 2, Vec2.Zero);
+            scene.AddPlayer("p2", colors[1], 2, Vec2.Zero);
 
             var gfc = cc.Get<GameFlowController>();
             gfc.StartFlow();

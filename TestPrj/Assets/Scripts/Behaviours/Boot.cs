@@ -19,7 +19,7 @@ namespace AnticGameTest
         void Awake()
         {
             game = new();
-            game.Build(0, -80, -45, 80, 45);
+            game.Build(System.DateTime.Now.Millisecond, -80, -45, 80, 45);
             GameDriver.Game = game;
 
             Scene.BuildScene(game);
