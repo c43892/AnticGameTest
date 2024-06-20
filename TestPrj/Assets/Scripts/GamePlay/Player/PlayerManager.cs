@@ -23,7 +23,7 @@ namespace AnticGameTest
         public AIPlayer[] Ais { get; }
     }
 
-    public class PlayerManager : Component, IPlayerManager, IAIManager
+    public class PlayerManager : Component, IPlayerManager, IAIManager, IClearable
     {
         public override string Name { get => "PlayerManager"; }
 

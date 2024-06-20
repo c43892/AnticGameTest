@@ -13,15 +13,13 @@ namespace AnticGameTest
 
         void Score(string id, int dScore);
 
-        void Clear();
-
         int GetScore(string id);
 
         void OnScoreChanged(Action<string, int> handler);
     }
 
-    public class ScoreManager : Component, IScoreManager
-    {
+    public class ScoreManager : Component, IScoreManager, IClearable
+{
         public override string Name { get => "ScoreManager"; }
         public int MinScore { get; private set; }
         public int MaxScore { get; private set; }

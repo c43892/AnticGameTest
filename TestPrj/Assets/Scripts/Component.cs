@@ -108,10 +108,27 @@ namespace AnticGameTest
                 }
             }
         }
+
+        public void Foreach<T>(Action<T> travel) where T : class
+        {
+            foreach (var pq in components.Values)
+            {
+                foreach (var com in pq)
+                {
+                    if (com is T)
+                        travel(com as T);
+                }
+            }
+        }
     }
 
     public interface IFrameDriven
     {
         void OnElapsed(Fix64 te);
+    }
+
+    public interface IClearable
+    {
+        void Clear();
     }
 }

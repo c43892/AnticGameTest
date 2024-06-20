@@ -365,6 +365,7 @@
 "Assets/Scripts/GamePlay/GameFlowController.cs"
 "Assets/Scripts/GamePlay/InputManager.cs"
 "Assets/Scripts/GamePlay/Player/AIPlayer.cs"
+"Assets/Scripts/GamePlay/Player/AIStrategies/AICopyShot.cs"
 "Assets/Scripts/GamePlay/Player/AIStrategies/AIRandomShot.cs"
 "Assets/Scripts/GamePlay/Player/PlayerBall.cs"
 "Assets/Scripts/GamePlay/Player/PlayerInfo.cs"

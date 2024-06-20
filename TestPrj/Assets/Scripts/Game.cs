@@ -27,12 +27,7 @@ namespace AnticGameTest
             // try driving all frame driven components with a fixed interval
             while (timeElapsed >= LogicFrameTimeInterval)
             {
-                cc.Foreach(com =>
-                {
-                    if (com is IFrameDriven)
-                        (com as IFrameDriven).OnElapsed(te);
-                });
-
+                cc.Foreach<IFrameDriven>(com => com.OnElapsed(te));
                 timeElapsed -= LogicFrameTimeInterval;
             }
         }
@@ -86,25 +81,26 @@ namespace AnticGameTest
 
         public void Start(int ballCount, int[] colors)
         {
-            var scene = cc.Get<Scene>();
-            scene.Clear();
-
-            var scoreManager = cc.Get<IScoreManager>();
-            scoreManager.Clear();
+            cc.Foreach<IClearable>(com => com.Clear());
 
             // initialize the game status
+            var scene = cc.Get<Scene>();
             scene.SpawnStaticBalls(ballCount, colors, 0.5f, 1);
 
             // add players
             var playerManager = cc.Get<IPlayerManager>();
             var pb1 = scene.AddPlayerBall("p1", colors[0], 2, Vec2.Zero);
             var pb2 = scene.AddPlayerBall("p2", colors[1], 2, Vec2.Zero);
+            var pb3 = scene.AddPlayerBall("p3", colors[2], 2, Vec2.Zero);
             var p1 = playerManager.AddPlayer(pb1.PlayerId);
             var p2 = playerManager.AddPlayer(pb2.PlayerId);
+            var p3 = playerManager.AddPlayer(pb3.PlayerId);
 
-            // make p2 an ai player
+            // make p2 an random-ai player, p3 a copy-ai player
+            var inputManager = cc.Get<IInputManager>();
             var aiManager = cc.Get<IAIManager>();
             aiManager.MakePlayerAIDrive(p2, new AIRandomShot(Rand, 100, 300));
+            aiManager.MakePlayerAIDrive(p3, new AICopyShot(inputManager, p1.Id));
 
             var gfc = cc.Get<GameFlowController>();
             gfc.StartFlow();

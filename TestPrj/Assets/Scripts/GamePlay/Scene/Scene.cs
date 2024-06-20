@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace AnticGameTest
 {
-    public class Scene : Component, IFrameDriven
+    public class Scene : Component, IFrameDriven, IClearable
     {
         public override string Name { get => "Scene"; }
 
